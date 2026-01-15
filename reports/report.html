@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Web Security Assessment Report</title>
+<style>
+body {
+    font-family: 'Segoe UI', Arial;
+    background: #eef1f5;
+    padding: 30px;
+}
+.header {
+    background: linear-gradient(135deg, #1e1e2f, #2c3e50);
+    color: white;
+    padding: 30px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+.card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+}
+.LOW { background: #2ecc71; color: white; }
+.MEDIUM { background: #f1c40f; }
+.HIGH { background: #e67e22; color: white; }
+.CRITICAL { background: #e74c3c; color: white; }
+pre {
+    background: #f4f6f8;
+    padding: 16px;
+    border-radius: 10px;
+}
+.footer {
+    background: #111827;
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    text-align: center;
+}
+.footer a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Web Security Assessment Report</h1>
+<p><b>Target:</b> https://lab.nonivision.in/</p>
+<p><b>Date:</b> 15 Jan 2026 21:43</p>
+<p><b>Scan Type:</b> Unauthenticated External Assessment</p>
+<p>This scan was performed without login access, simulating an external attacker.</p>
+<p><b>Overall Risk:</b> <span class="badge LOW">LOW</span></p>
+<p><b>Severity Score:</b> 1.9/10</p>
+</div>
+
+<div class="card">
+<p>
+This report explains the identified security risks in simple language.
+Each issue includes step-by-step remediation so even beginners can
+understand and fix the problem safely.
+</p>
+</div>
+
+<div class="card">
+<h2>Open Ports – Risk Explanation & Fix</h2>
+
+<h3>Port 80 – HTTP</h3>
+<p><b>Risk Level:</b> Medium</p>
+
+<p><b>What is the problem?</b><br>HTTP does not encrypt data. Any attacker on the same network can intercept or modify traffic (Man-in-the-Middle attack).</p>
+
+<p><b>How to Secure (Step-by-Step):</b></p>
+<pre>Step 1: Install an SSL/TLS certificate (Let's Encrypt recommended).
+Step 2: Force HTTPS redirection.
+
+Example (Nginx):
+server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}
+
+Why this works:
+All users are automatically redirected to encrypted HTTPS.
+
+How to verify:
+Open http://yourdomain.com and confirm it redirects to https://</pre>
+
+<p><b>Related CVEs & CVSS Scores:</b></p>
+<ul>
+
+<li>CVE-1999-0236 – CVSS: 7.5</li>
+
+<li>CVE-1999-1068 – CVSS: 5.0</li>
+
+</ul>
+
+<h3>Port 443 – HTTPS</h3>
+<p><b>Risk Level:</b> Safe</p>
+
+<p><b>What is the problem?</b><br>HTTPS encrypts communication between users and the server, protecting credentials and sensitive data.</p>
+
+<p><b>How to Secure (Step-by-Step):</b></p>
+<pre>Step 1: Use TLS 1.2 or TLS 1.3 only.
+Step 2: Disable SSLv2, SSLv3, TLS 1.0, TLS 1.1.
+
+Why this matters:
+Older protocols contain known cryptographic weaknesses.
+
+How to verify:
+Use https://www.ssllabs.com/ssltest/</pre>
+
+<p><b>Related CVEs & CVSS Scores:</b></p>
+<ul>
+
+<li>CVE-1999-1537 – CVSS: 5.0</li>
+
+<li>CVE-2000-0539 – CVSS: 6.4</li>
+
+</ul>
+
+</div>
+
+<div class="card">
+<h2>Security Header Issues</h2>
+<ul><li>X-Frame-Options</li><li>X-Content-Type-Options</li><li>Strict-Transport-Security</li></ul>
+</div>
+
+<div class="card">
+<h2>Server Fingerprint</h2>
+<pre>{'Server': 'LiteSpeed', 'X-Powered-By': 'PHP/8.2.27'}</pre>
+</div>
+
+<div class="card">
+<h2>Nmap Scan</h2>
+<pre>Nmap not installed.
+Install: sudo apt install nmap</pre>
+</div>
+
+<div class="card">
+<h2>WPScan</h2>
+<pre>WPScan not installed.
+Install: sudo gem install wpscan</pre>
+</div>
+
+<div class="footer">
+<b>Security Analyst: Ishant Saini</b><br>
+<a href="https://wa.me/919625254286" target="_blank">
+📞 Contact Admin on WhatsApp
+</a>
+<p style="margin-top:15px;font-size:13px;">
+Disclaimer: This report does not guarantee the absence of vulnerabilities.
+Findings are based on the scope and time of assessment.
+</p>
+</div>
+
+</body>
+</html>

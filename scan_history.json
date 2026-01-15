@@ -1,0 +1,30 @@
+[
+    {
+        "date": "2026-01-15 20:44:25.326897",
+        "target": "https://lab.nonivision.in/",
+        "open_ports": [
+            21,
+            80,
+            443,
+            3306
+        ],
+        "header_issues": [
+            "Missing X-Frame-Options",
+            "Missing X-Content-Type-Options",
+            "Missing Strict-Transport-Security"
+        ],
+        "https_redirect": true,
+        "fingerprint": {
+            "Server": "LiteSpeed",
+            "X-Powered-By": "PHP/8.2.27"
+        }
+    },
+    {
+        "target": "https://lab.nonivision.in/",
+        "date": "2026-01-15 20:52:21.878569"
+    },
+    {
+        "target": "https://lab.nonivision.in/",
+        "date": "2026-01-15 20:57:31.424197"
+    }
+]
