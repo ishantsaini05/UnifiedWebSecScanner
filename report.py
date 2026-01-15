@@ -168,20 +168,38 @@ Findings are based on the scope and time of assessment.
         f.write(html)
 
     return {
-        "target": data["target"],
-        "date": data["date"],
-        "severity": severity,
-        "risk_level": risk_level,
-        "ports": data["ports"],
-        "issues": data["issues"],
-        "port_details": [
-            {
-                "port": p,
-                "service": PORT_INFO[p]["service"],
-                "risk": PORT_INFO[p]["risk"],
-                "desc": PORT_INFO[p]["desc"],
-                "fix": PORT_INFO[p]["fix"],
-                "cves": cves[p]
-            } for p in data["ports"]
-        ]
-    }
+    "target": data["target"],
+    "date": data["date"],
+    "severity": severity,
+    "risk_level": risk_level,
+    "ports": data["ports"],
+    "issues": data["issues"],
+
+    "fingerprint": data.get("fingerprint") or {
+        "Server": "Unable to detect server information",
+        "X-Powered-By": "Not disclosed"
+    },
+
+    "nmap": data.get("nmap") or (
+        "Nmap scan was not performed because the tool is not installed.\n\n"
+        "Install command:\n"
+        "sudo apt install nmap"
+    ),
+
+    "wpscan": data.get("wpscan") or (
+        "WPScan was not executed because it is not installed.\n\n"
+        "Install command:\n"
+        "sudo gem install wpscan"
+    ),
+
+    "port_details": [
+        {
+            "port": p,
+            "service": PORT_INFO[p]["service"],
+            "risk": PORT_INFO[p]["risk"],
+            "desc": PORT_INFO[p]["desc"],
+            "fix": PORT_INFO[p]["fix"],
+            "cves": cves[p]
+        } for p in data["ports"]
+    ]
+}

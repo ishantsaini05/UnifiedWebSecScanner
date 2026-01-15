@@ -1,6 +1,5 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
 from reportlab.lib.colors import HexColor
 
 def generate_pdf(report_data):
@@ -13,7 +12,6 @@ def generate_pdf(report_data):
     # Colors
     dark = HexColor("#111827")
     gray = HexColor("#374151")
-    green = HexColor("#16a34a")
     blue = HexColor("#2563eb")
 
     # =========================
@@ -40,49 +38,31 @@ def generate_pdf(report_data):
     c.drawString(margin_x, y, f"Date: {report_data['date']}")
     y -= 15
 
-    c.drawString(
-        margin_x,
-        y,
-        "Scan Type: Unauthenticated External Assessment"
-    )
+    c.drawString(margin_x, y, "Scan Type: Unauthenticated External Assessment")
     y -= 14
 
     c.drawString(
         margin_x,
         y,
-        "This scan was performed without login access, simulating an external attacker."
+        "This scan simulates an external attacker without login access."
     )
     y -= 18
 
-    c.drawString(
-        margin_x,
-        y,
-        f"Overall Risk: {report_data['risk_level']}"
-    )
+    c.drawString(margin_x, y, f"Overall Risk: {report_data['risk_level']}")
     y -= 15
 
-    c.drawString(
-        margin_x,
-        y,
-        f"Severity Score: {report_data['severity']}/10"
-    )
+    c.drawString(margin_x, y, f"Severity Score: {report_data['severity']}/10")
     y -= 22
 
     c.drawString(
         margin_x,
         y,
-        "This report explains the identified security risks in simple language."
-    )
-    y -= 14
-    c.drawString(
-        margin_x,
-        y,
-        "Each issue includes clear remediation steps so even beginners can fix them safely."
+        "This report explains security risks in simple language with step-by-step fixes."
     )
     y -= 30
 
     # =========================
-    # OPEN PORTS SECTION
+    # OPEN PORTS
     # =========================
     c.setFont("Helvetica-Bold", 15)
     c.setFillColor(dark)
@@ -122,7 +102,7 @@ def generate_pdf(report_data):
 
         y -= 10
 
-        if p["cves"]:
+        if p.get("cves"):
             c.drawString(margin_x + 20, y, "Related CVEs & CVSS Scores:")
             y -= 14
             for cve in p["cves"]:
@@ -151,17 +131,21 @@ def generate_pdf(report_data):
     c.setFillColor(gray)
 
     if report_data["issues"]:
-        for i in report_data["issues"]:
-            c.drawString(margin_x + 20, y, f"- {i}")
+        for issue in report_data["issues"]:
+            c.drawString(margin_x + 20, y, f"- {issue}")
             y -= 14
     else:
-        c.drawString(margin_x + 20, y, "No critical security header issues detected.")
+        c.drawString(
+            margin_x + 20,
+            y,
+            "No critical security header issues were detected."
+        )
         y -= 14
 
     y -= 20
 
     # =========================
-    # SERVER FINGERPRINT
+    # SERVER FINGERPRINT (FIXED)
     # =========================
     c.setFont("Helvetica-Bold", 15)
     c.setFillColor(dark)
@@ -170,29 +154,66 @@ def generate_pdf(report_data):
 
     c.setFont("Helvetica", 11)
     c.setFillColor(gray)
-    c.drawString(margin_x + 20, y, str(report_data.get("fingerprint", {})))
-    y -= 30
+
+    fingerprint = report_data.get("fingerprint", {})
+
+    if fingerprint:
+        for key, value in fingerprint.items():
+            c.drawString(margin_x + 20, y, f"{key}: {value}")
+            y -= 14
+    else:
+        c.drawString(
+            margin_x + 20,
+            y,
+            "Server fingerprint information could not be detected."
+        )
+        y -= 14
+
+    y -= 20
 
     # =========================
-    # NMAP & WPSCAN
+    # NMAP RESULT (SAFE)
     # =========================
     c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(dark)
     c.drawString(margin_x, y, "Nmap Scan Result")
     y -= 20
 
     c.setFont("Helvetica", 10)
-    for line in report_data.get("nmap", "").split("\n"):
+    nmap_result = report_data.get("nmap", "").strip()
+
+    if not nmap_result:
+        nmap_result = (
+            "Nmap scan was not performed because the tool is not installed.\n"
+            "Install command:\n"
+            "sudo apt install nmap"
+        )
+
+    for line in nmap_result.split("\n"):
         c.drawString(margin_x + 20, y, line)
         y -= 12
 
     y -= 20
 
+    # =========================
+    # WPSCAN RESULT (SAFE)
+    # =========================
     c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(dark)
     c.drawString(margin_x, y, "WPScan Result")
     y -= 20
 
     c.setFont("Helvetica", 10)
-    for line in report_data.get("wpscan", "").split("\n"):
+    wpscan_result = report_data.get("wpscan", "").strip()
+
+    if not wpscan_result:
+        wpscan_result = (
+            "WPScan was not executed because it is not installed.\n"
+            "Install command:\n"
+            "sudo gem install wpscan"
+        )
+
+    for line in wpscan_result.split("\n"):
         c.drawString(margin_x + 20, y, line)
         y -= 12
 
