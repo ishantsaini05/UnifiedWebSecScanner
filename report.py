@@ -123,7 +123,13 @@ understand and fix the problem safely.
 
 <div class="card">
 <h2>Server Fingerprint</h2>
-<pre>{{ fingerprint }}</pre>
+<pre>
+{% if fingerprint %}
+{{ fingerprint }}
+{% else %}
+Server information is intentionally hidden. This is a positive security practice.
+{% endif %}
+</pre>
 </div>
 
 <div class="card">

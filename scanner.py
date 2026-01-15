@@ -52,12 +52,30 @@ def https_redirect(domain):
 def fingerprint(url):
     try:
         r = requests.get(url, timeout=5)
+        server = r.headers.get("Server")
+        powered = r.headers.get("X-Powered-By")
+
+        if not server and not powered:
+            return {
+                "Info": (
+                    "Server identification headers are hidden. "
+                    "This is a good security practice that reduces "
+                    "information disclosure to attackers."
+                )
+            }
+
         return {
-            "Server": r.headers.get("Server", "Unknown"),
-            "X-Powered-By": r.headers.get("X-Powered-By", "Unknown")
+            "Server": server or "Not Disclosed",
+            "X-Powered-By": powered or "Not Disclosed"
         }
+
     except:
-        return {}
+        return {
+            "Info": (
+                "Server fingerprint could not be retrieved. "
+                "Target may be blocking automated requests."
+            )
+        }
 
 
 def tool_exists(tool):
@@ -66,19 +84,32 @@ def tool_exists(tool):
 
 def run_nmap(domain):
     if not tool_exists("nmap"):
-        return "Nmap not installed.\nInstall: sudo apt install nmap"
+        return (
+            "Nmap scan was not performed because the tool is not installed "
+            "on the scanning system.\n\n"
+            "Install command:\n"
+            "sudo apt install nmap"
+        )
     try:
-        return subprocess.check_output(["nmap", "-F", domain]).decode()
+        return subprocess.check_output(
+            ["nmap", "-F", domain],
+            stderr=subprocess.DEVNULL
+        ).decode()
     except:
-        return "Nmap execution failed"
+        return "Nmap execution failed due to an unexpected error."
 
 
 def run_wpscan(url):
     if not tool_exists("wpscan"):
-        return "WPScan not installed.\nInstall: sudo gem install wpscan"
+        return (
+            "WPScan was not executed because it is not installed on the system.\n\n"
+            "Install command:\n"
+            "sudo gem install wpscan"
+        )
     try:
         return subprocess.check_output(
-            ["wpscan", "--url", url, "--no-update"]
+            ["wpscan", "--url", url, "--no-update"],
+            stderr=subprocess.DEVNULL
         ).decode()
     except:
-        return "WPScan execution failed"
+        return "WPScan execution failed due to an unexpected error."
